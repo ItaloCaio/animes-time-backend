@@ -3,7 +3,7 @@ import { Post, Controller, Body, Get, Param, Put, Delete } from '@nestjs/common'
 import { AnimeDto } from './dto/anime.dto';
 import { Anime } from './interface/anime';
 
-@Controller('anime')
+@Controller('animes')
 export class AnimeController {
     constructor(private readonly animeService: AnimeService) {
 

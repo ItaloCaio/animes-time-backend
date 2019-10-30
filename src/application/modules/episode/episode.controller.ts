@@ -3,14 +3,15 @@ import { EpisodeDto } from './dto/episode.dto';
 import { Episode } from './interface/episode';
 import { EpisodeService } from './episode.service';
 
-@Controller('episode')
+@Controller('animes/:anime_id/episodes')
 export class EpisodeController {
 
     constructor(private readonly episodeService: EpisodeService) { }
 
     @Post()
-    async saveEpisode(@Body() episodeDto: EpisodeDto): Promise<Episode> {
-
+    async saveEpisode(@Body() episodeDto: EpisodeDto, @Param('anime_id') animeId): Promise<Episode> {
+        const episode: Episode = episodeDto;
+        episode.animeId = await animeId;
         return this.episodeService.add(episodeDto);
     }
 

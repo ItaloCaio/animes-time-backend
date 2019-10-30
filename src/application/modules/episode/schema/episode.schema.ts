@@ -5,4 +5,5 @@ export const EpisodeSchema = new mongoose.Schema({
     num: Number,
     isDownloaded: Boolean,
     isWatched: Boolean,
+    animeId: String,
 });
