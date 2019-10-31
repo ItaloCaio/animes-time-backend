@@ -19,6 +19,9 @@ export class EpisodeService implements IEpisodeService {
     async getAll(): Promise<Episode[]> {
         return await this.episodeModel.find().exec();
     }
+    async getAllFromAnimeId(animeId: string): Promise<Episode[]>{
+        return await this.episodeModel.find({animeId});
+    }
     async getById(id: string): Promise<Episode> {
         return this.episodeModel.findOne({ _id: id });
     }

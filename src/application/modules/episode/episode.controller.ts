@@ -16,8 +16,9 @@ export class EpisodeController {
     }
 
     @Get()
-    async getAllEpisodes(): Promise<Episode[]> {
-        return this.episodeService.getAll();
+    async getAllEpisodesFromAnimeId(@Param('anime_id') animeId): Promise<Episode[]> {
+        
+        return this.episodeService.getAllFromAnimeId(animeId);
     }
 
     @Get(':id')

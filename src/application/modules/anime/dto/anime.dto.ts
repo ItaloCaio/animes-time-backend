@@ -1,4 +1,5 @@
 import { IsInt, IsString } from 'class-validator';
+import { Anime } from '../interface/anime';
 
 export class AnimeDto {
     @IsInt()
@@ -9,4 +10,5 @@ export class AnimeDto {
     readonly category: string;
     @IsString()
     readonly name: string;
+    readonly myAnimes?: Anime[];
 }
