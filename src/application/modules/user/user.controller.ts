@@ -1,8 +1,10 @@
 import { UserService } from './user.service';
-import { Controller, Get, Post, Body, Param, Put, Delete, UsePipes, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UsePipes, HttpException, HttpStatus, UseGuards } from '@nestjs/common';
 import { User } from './interface/user';
 import { UserDto } from './dto/user.dto';
 import { ValidationPipe } from '../validation/validation.pipe';
+import { AuthGuard } from '../auth/auth.guard';
+import { UserDecorator } from './user.decorator';
 
 @Controller('users')
 export class UserController {
@@ -40,7 +42,7 @@ export class UserController {
 
     @Put(':id')
     @UsePipes(ValidationPipe)
-    public async updateUser(@Param('id') id, @Body() user: UserDto): Promise<User> {
+    public async updateUser(@Param('id') id, @Body() user: User): Promise<User> {
       return this.userService.update(id, user);
     }
 
@@ -52,5 +54,11 @@ export class UserController {
     @Post('/login')
     public async login(@Body() user): Promise<User>{
       return this.userService.login(user);
+    }
+
+    @Get('auth/whoami')
+    @UseGuards(new AuthGuard())
+    showMe(@UserDecorator('username') username: string) {
+      return this.userService.read(username);
     }
 }

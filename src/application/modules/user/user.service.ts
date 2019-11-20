@@ -1,11 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, HttpStatus, HttpException } from '@nestjs/common';
 import { User } from './interface/user';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { IUserService } from './port/user.service.interface';
 import { UserDto } from './dto/user.dto';
 import * as bcrypt from 'bcryptjs';
-import * as jwt from 'jsonwebtoken';
 
 @Injectable()
 export class UserService implements IUserService {
@@ -17,12 +16,18 @@ export class UserService implements IUserService {
   }
 
   async register(item: UserDto): Promise<User> {
-
+    const { email } = item;
+    let user = await this.userModel.findOne({ email: email });
+    if (user) {
+      throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
+    }
+    user = await this.userModel.create(item);
+    const password: string = await this.hashPassword(item);
     const newUser = new this.userModel(item);
-    const password: string = await this.hashPassword(newUser);
     newUser.password = password;
-    return await newUser.save();
-  }
+    
+    return newUser.save(newUser);
+   }
 
   async add(item: User): Promise<User> {
     const newUser = new this.userModel(item);
@@ -49,7 +54,10 @@ export class UserService implements IUserService {
     return password;
   }
 
-  private async comparePassword(password: string, user: User) {
-    return await bcrypt.compare(password, user.password);
+  async read(username: string) {
+    const user = await this.userModel.findOne({
+      where: { username }
+    });
+    return user.toResponseObject(false);
   }
 }

@@ -6,4 +6,5 @@ export const UserSchema = new mongoose.Schema({
     email: String,
     password: String,
     myAnimes: [AnimeSchema],
+    token: String,
 });
