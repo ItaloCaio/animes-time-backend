@@ -5,30 +5,26 @@ import { Model } from 'mongoose';
 import { IUserService } from './port/user.service.interface';
 import { UserDto } from './dto/user.dto';
 import * as bcrypt from 'bcryptjs';
+import { Identifier } from '@babel/types';
 
 @Injectable()
 export class UserService implements IUserService {
 
   constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
 
-  private userOn: User ; //= {id:'5dbb282aedb1a61e608f1538', name: 'teste', password: '123', email: 'teste'};
+  userOn: User;
 
   async login(user: User): Promise<User> {
     const { email } = user;
     const userLog: User = await this.userModel.find({
       email
     });
-  
-    bcrypt.compare(user.password, userLog.password, function(res, err) {
-      if(res) {
-       // Passwords match
-       this.userOn = userLog;
-      } else {
-        throw new HttpException('Senha incorreta', HttpStatus.BAD_REQUEST);
-      } 
-    });
-      
-
+    //console.log(userLog[0]);
+   
+    if(user.password === userLog[0].password)
+        this.userOn = await userLog[0];
+    else
+      console.log('senha invalida');
     return userLog;
   }
 
@@ -38,10 +34,8 @@ export class UserService implements IUserService {
     if (user) {
       throw new HttpException('User already exists', HttpStatus.BAD_REQUEST);
     }
-    user = await this.userModel.create(item);
-    const password: string = await this.hashPassword(item);
+    
     const newUser = new this.userModel(item);
-    newUser.password = password;
 
     return newUser.save(newUser);
   }
@@ -74,4 +68,11 @@ export class UserService implements IUserService {
   async read(): Promise<User> {
     return this.userOn;
   }
+
+  public set user(value: User) {
+    this.userOn = value;
+}
+  public get user(): User {
+  return this.userOn;
+}
 }
