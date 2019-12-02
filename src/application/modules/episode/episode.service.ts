@@ -12,7 +12,6 @@ export class EpisodeService implements IEpisodeService {
 
     async add(item: Episode): Promise<Episode> {
         const episode = new this.episodeModel(item);
-        console.log(episode);
         return await episode.save();
     }
 

@@ -3,8 +3,6 @@ import { Controller, Get, Post, Body, Param, Put, Delete, UsePipes, HttpExceptio
 import { User } from './interface/user';
 import { UserDto } from './dto/user.dto';
 import { ValidationPipe } from '../validation/validation.pipe';
-import { AuthGuard } from '../auth/auth.guard';
-import { UserDecorator } from './user.decorator';
 
 @Controller('users')
 export class UserController {
@@ -51,14 +49,14 @@ export class UserController {
       return this.userService.remove(id);
     }
 
-    @Post('/login')
-    public async login(@Body() user): Promise<User>{
+    @Post('login')
+    public async login(@Body() user: User): Promise<User>{
+      console.log(user);
       return this.userService.login(user);
     }
 
-    @Get('auth/whoami')
-    @UseGuards(new AuthGuard())
-    showMe(@UserDecorator('username') username: string) {
-      return this.userService.read(username);
+    @Get('on/auth')
+     async showMeOn(): Promise<User> {
+      return this.userService.read();
     }
 }

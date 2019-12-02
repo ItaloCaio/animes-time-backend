@@ -11,8 +11,25 @@ export class UserService implements IUserService {
 
   constructor(@InjectModel('User') private readonly userModel: Model<User>) { }
 
-  async login(user: any): Promise<User> {
-    throw new Error('Method not implemented.');
+  private userOn: User ; //= {id:'5dbb282aedb1a61e608f1538', name: 'teste', password: '123', email: 'teste'};
+
+  async login(user: User): Promise<User> {
+    const { email } = user;
+    const userLog: User = await this.userModel.find({
+      email
+    });
+  
+    bcrypt.compare(user.password, userLog.password, function(res, err) {
+      if(res) {
+       // Passwords match
+       this.userOn = userLog;
+      } else {
+        throw new HttpException('Senha incorreta', HttpStatus.BAD_REQUEST);
+      } 
+    });
+      
+
+    return userLog;
   }
 
   async register(item: UserDto): Promise<User> {
@@ -25,9 +42,9 @@ export class UserService implements IUserService {
     const password: string = await this.hashPassword(item);
     const newUser = new this.userModel(item);
     newUser.password = password;
-    
+
     return newUser.save(newUser);
-   }
+  }
 
   async add(item: User): Promise<User> {
     const newUser = new this.userModel(item);
@@ -54,10 +71,7 @@ export class UserService implements IUserService {
     return password;
   }
 
-  async read(username: string) {
-    const user = await this.userModel.findOne({
-      where: { username }
-    });
-    return user.toResponseObject(false);
+  async read(): Promise<User> {
+    return this.userOn;
   }
 }
