@@ -69,6 +69,12 @@ export class UserService implements IUserService {
     return this.userOn;
   }
 
+  async hide() {
+    this.user = null;
+
+    return this.user;
+  }
+
   public set user(value: User) {
     this.userOn = value;
 }

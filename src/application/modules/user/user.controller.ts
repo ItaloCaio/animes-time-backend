@@ -51,12 +51,16 @@ export class UserController {
 
     @Post('login')
     public async login(@Body() user: User): Promise<User>{
-      console.log(user);
+    
       return this.userService.login(user);
     }
 
     @Get('on/auth')
      async showMeOn(): Promise<User> {
       return this.userService.read();
+    }
+    @Get('out/auth')
+     async hideMeOn(): Promise<User> {
+      return this.userService.hide();
     }
 }

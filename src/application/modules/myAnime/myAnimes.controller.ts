@@ -10,7 +10,6 @@ export class MyAnimesController {
 
     @Post()
     async saveMyAnime(@Body() myAnimesDto: MyAnimesDto, @Param('user_id') userId): Promise<MyAnimes> {
-        console.log(myAnimesDto);
         const myAnimes: MyAnimes = myAnimesDto;
         myAnimes.userId = await userId;
         return this.myAnimesService.add(myAnimes);
