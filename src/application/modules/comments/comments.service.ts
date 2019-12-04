@@ -16,6 +16,10 @@ export class CommentsService implements IComments {
    async getAll(): Promise<Comments[]> {
         return await this.commentsModel.find().exec();
     }
+
+    async getAllFromEpisodeId(episodeId: string): Promise<Comments[]> {
+        return await this.commentsModel.find({episodeId})
+    }
     getById(id: string): Promise<Comments> {
         throw new Error('Method not implemented.');
     }

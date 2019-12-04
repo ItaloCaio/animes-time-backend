@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { Comments } from './interface/comments.interface';
 import { CommentsDto } from './dto/comments.dto';
@@ -10,8 +10,8 @@ export class CommentsController {
     }
 
     @Get()
-    async getAllCommentsFromEpisode(): Promise<Comments[]> {
-        return this.commentsService.getAll();
+    async getAllCommentsFromEpisode(@Param('episode_id') episodeId): Promise<Comments[]> {
+        return this.commentsService.getAllFromEpisodeId(episodeId);
     }
 
     @Post()
